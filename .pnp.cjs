@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["autoprefixer", "virtual:76928ff5a301c548f740a352ea09e7343649dfd73918e898c7632ace8b1228787e9c12222e3fbe157f78f1972037d530ebf88324752a3e27088c826ae86e1553#npm:10.4.14"],\
+            ["cytoscape", "npm:3.23.0"],\
             ["next", "virtual:76928ff5a301c548f740a352ea09e7343649dfd73918e898c7632ace8b1228787e9c12222e3fbe157f78f1972037d530ebf88324752a3e27088c826ae86e1553#npm:13.2.4"],\
             ["postcss", "npm:8.4.21"],\
             ["react", "npm:18.2.0"],\
@@ -588,6 +589,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["cytoscape", [\
+        ["npm:3.23.0", {\
+          "packageLocation": "./.yarn/cache/cytoscape-npm-3.23.0-4279870c01-bcb3c48068.zip/node_modules/cytoscape/",\
+          "packageDependencies": [\
+            ["cytoscape", "npm:3.23.0"],\
+            ["heap", "npm:0.2.7"],\
+            ["lodash", "npm:4.17.21"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["debug", [\
         ["npm:4.3.4", {\
           "packageLocation": "./.yarn/cache/debug-npm-4.3.4-4513954577-3dbad3f94e.zip/node_modules/debug/",\
@@ -810,6 +822,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["funregulation-frontend", "workspace:."],\
             ["autoprefixer", "virtual:76928ff5a301c548f740a352ea09e7343649dfd73918e898c7632ace8b1228787e9c12222e3fbe157f78f1972037d530ebf88324752a3e27088c826ae86e1553#npm:10.4.14"],\
+            ["cytoscape", "npm:3.23.0"],\
             ["next", "virtual:76928ff5a301c548f740a352ea09e7343649dfd73918e898c7632ace8b1228787e9c12222e3fbe157f78f1972037d530ebf88324752a3e27088c826ae86e1553#npm:13.2.4"],\
             ["postcss", "npm:8.4.21"],\
             ["react", "npm:18.2.0"],\
@@ -905,6 +918,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/has-unicode-npm-2.0.1-893adb4747-1eab07a743.zip/node_modules/has-unicode/",\
           "packageDependencies": [\
             ["has-unicode", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["heap", [\
+        ["npm:0.2.7", {\
+          "packageLocation": "./.yarn/cache/heap-npm-0.2.7-198a59506f-b0f3963a79.zip/node_modules/heap/",\
+          "packageDependencies": [\
+            ["heap", "npm:0.2.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1106,6 +1128,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/lilconfig-npm-2.1.0-a179261924-8549bb352b.zip/node_modules/lilconfig/",\
           "packageDependencies": [\
             ["lilconfig", "npm:2.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lodash", [\
+        ["npm:4.17.21", {\
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-eb835a2e51.zip/node_modules/lodash/",\
+          "packageDependencies": [\
+            ["lodash", "npm:4.17.21"]\
           ],\
           "linkType": "HARD"\
         }]\
