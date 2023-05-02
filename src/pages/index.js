@@ -1,16 +1,15 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+
+import Header from './Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
   return (
-    <>
-      <h1 className="text-3xl font-bold text-stone-500 underline">
-      Hello world!
-    </h1>
-    </>
-  )
+    <div className="w-screen grid grid-cols-3">
+      <Header/>
+    </div>
+    
+  );
 }
