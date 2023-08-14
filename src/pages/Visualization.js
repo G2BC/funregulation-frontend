@@ -20,8 +20,28 @@ export default function Visualization() {
     axios
       .get("http://localhost:3000/api/grn", { params: {organism: organism} })
       .then((response) => {
-        //console.log(response.data);
-        setElements(response.data);
+        const {tfs, tgs, edges} = response.data;
+        // console.log(`TFs: ${tfs}`);
+        // console.log(`TGs: ${tgs}`);
+        // edges.forEach(edge => {
+        //   console.log(`Edge: ${edge.tf_locus_tag} e ${edge.tg_locus_tag}`);
+        // });
+        
+        //PARA CORRIGIR OS ELEMENTOS DO JSON EM SINTAXE ERRADA
+        // tfs.forEach(element => {
+        //   console.log(`{"id": "${element}"},`)
+        // });
+        let nodes = [];
+        tfs.forEach(elemento => {
+          nodes.push(elemento);
+        });
+        tgs.forEach(elemento => {
+          nodes.push(elemento);
+        });
+        edges.forEach(elemento => {
+          nodes.push(elemento);
+        });
+        setElements(nodes);
         setIsElementsLoaded(true);
       })
       .catch((error) => {

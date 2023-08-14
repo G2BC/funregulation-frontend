@@ -2,9 +2,9 @@ import cytoscape from "cytoscape";
 
 import { useEffect } from "react";
 
-export default function Visualization({ elements, setNodeName }) {
+export default function Canva({ elements, setNodeName }) {
     function renderCytoscape() {
-        console.log(elements);
+        //console.log("elementos:",elements);
         const cy = cytoscape({
             container: document.getElementById("cy"), // container to render in
         
@@ -30,9 +30,10 @@ export default function Visualization({ elements, setNodeName }) {
                 style: {
                   "background-color": "#666",
                   label: "data(id)",
+                  shape: "data(shape)"
                 },
               },
-        
+              
               {
                 selector: "edge",
                 style: {
@@ -47,7 +48,7 @@ export default function Visualization({ elements, setNodeName }) {
 
             layout: {
               name: "grid",
-              rows: 10,
+              rows: 50,
               
             },
             zoom: 1,
@@ -57,7 +58,13 @@ export default function Visualization({ elements, setNodeName }) {
             animate: true,
             randomize: true,
           });
-        
+          
+          let layout = cy.layout({
+            name: 'random',
+            fit: true,
+            padding: 30,
+          });
+          layout.run();
           cy.on("click", "node", (evt) => {
             let node = evt.target;
             console.log("tapped " + node.id());
@@ -72,7 +79,7 @@ export default function Visualization({ elements, setNodeName }) {
       };
 
     useEffect(() => {
-        console.log("cytoscapeCanvas", elements);
+        //console.log("cytoscapeCanvas", elements);
         renderCytoscape()
       }, [elements]);
 
