@@ -15,7 +15,6 @@ export default function Visualization() {
 
   let cy;
 
-  //async function cytoscapeCanva() {
   function getElements() {
     axios
       .get("http://localhost:3000/api/grn", { params: {organism: organism} })
@@ -51,9 +50,6 @@ export default function Visualization() {
 
   const [elements, setElements] = useState([]);
 
-
-  //}
-
   useEffect(() => {
     getElements();
   }, []);
@@ -62,7 +58,7 @@ export default function Visualization() {
     <div className="w-screen grid grid-cols-3">
       <Header />
       {console.log(organism)}
-      {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>}
+      {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>}
       <SideBar nodeName={nodeName} />
     </div>
   );

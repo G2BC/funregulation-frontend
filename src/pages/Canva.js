@@ -2,27 +2,12 @@ import cytoscape from "cytoscape";
 
 import { useEffect } from "react";
 
-export default function Canva({ elements, setNodeName }) {
-    function renderCytoscape() {
+export default function Canva({ elements, setNodeName, cy }) {
+    function renderCytoscape(cy) {
         //console.log("elementos:",elements);
-        const cy = cytoscape({
+        cy = cytoscape({
             container: document.getElementById("cy"), // container to render in
-        
-            //elements: [
-            // list of graph elements to start with
             elements: elements,
-            //{
-            // edge ab
-            //  data: { id: "ab", source: "a", target: "b" },
-            // },
-            // {
-            //   data: { id: "aa", source: "a", target: "a" },
-            // },
-            // {
-            //   data: { id: "ac", source: "a", target: "c" },
-            // },
-            //],
-        
             style: [
               // the stylesheet for the graph
               {
@@ -47,7 +32,9 @@ export default function Canva({ elements, setNodeName }) {
             ],
 
             layout: {
-              name: "grid",
+              name: "random",
+              fit: true,
+              padding: 30,
               rows: 50,
               
             },
@@ -59,19 +46,12 @@ export default function Canva({ elements, setNodeName }) {
             randomize: true,
           });
           
-          let layout = cy.layout({
-            name: 'random',
-            fit: true,
-            padding: 30,
-          });
-          layout.run();
           cy.on("click", "node", (evt) => {
             let node = evt.target;
             console.log("tapped " + node.id());
             handleClick(node);
           });
 
-          //cy.nodes().sort().layout({name: "circle",})
     }
 
     const handleClick = (node) => {
@@ -80,10 +60,10 @@ export default function Canva({ elements, setNodeName }) {
 
     useEffect(() => {
         //console.log("cytoscapeCanvas", elements);
-        renderCytoscape()
+        renderCytoscape(cy)
       }, [elements]);
 
   
   
-  return <main id="cy" className="h-screen col-start-1 col-span-2"></main>;
+  return <div className="h-screen col-start-1 col-span-2 relative"><main id="cy" className="h-screen col-start-1 col-span-2 z-1"></main><div className="w-12 h-9 z-2 absolute bg-preto"></div></div>;
 }
