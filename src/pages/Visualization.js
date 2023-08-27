@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import cytoscape from "cytoscape";
 
 import Header from "./Header";
 import SideBar from "./SideBar";
-import Canva from "./Canva";
 
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
@@ -81,7 +80,7 @@ export default function Visualization() {
   function renderCytoscape(cy) {
     //cy.unmount();
     cy.mount(document.getElementById("cy"));
-    cy.container(document.getElementById("cy"));
+    //cy.container(document.getElementById("cy"));
     cy.add(elements);
     const layout = cy.layout({
       name: "random",
@@ -91,6 +90,7 @@ export default function Visualization() {
       avoidOverlap: true,
     });
     layout.run();
+
     cy.on("click", "node", (evt) => {
       let node = evt.target;
       console.log("tapped " + node.id());
@@ -127,22 +127,74 @@ export default function Visualization() {
     const layout = cy.layout(options);
     layout.run();
     cy.mount(document.getElementById("cy"));
+    console.log('circle layout selected');
   }
 
   const [elements, setElements] = useState([]);
 
+  // useEffect(() => {
+  //   getElements();
+  // }, []);
   useEffect(() => {
-    getElements();
+    axios
+      .get("http://localhost:3000/api/grn", { params: { organism: organism } })
+      .then((response) => {
+        const { tfs, tgs, edges } = response.data;
+        // console.log(`TFs: ${tfs}`);
+        // console.log(`TGs: ${tgs}`);
+        // edges.forEach(edge => {
+        //   console.log(`Edge: ${edge.tf_locus_tag} e ${edge.tg_locus_tag}`);
+        // });
+
+        //PARA CORRIGIR OS ELEMENTOS DO JSON EM SINTAXE ERRADA
+        // tfs.forEach(element => {
+        //   console.log(`{"id": "${element}"},`)
+        // });
+        let nodes = [];
+        tfs.forEach((elemento) => {
+          nodes.push(elemento);
+        });
+        tgs.forEach((elemento) => {
+          nodes.push(elemento);
+        });
+        edges.forEach((elemento) => {
+          nodes.push(elemento);
+        });
+        setElements(nodes);
+        setIsElementsLoaded(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const handleClick = (node) => {
     setNodeName(node.id());
   };
 
-  useEffect(() => {
-    //console.log("cytoscapeCanvas", elements);
-    renderCytoscape(cy);
-  }, [elements]);
+  // useEffect(() => {
+  //     console.log('renderizou')
+  //     renderCytoscape(cy);
+  // }, [elements]);
+  useEffect(()=> {
+    cy.mount(document.getElementById("cy"));
+    //cy.container(document.getElementById("cy"));
+    cy.add(elements);
+    const layout = cy.layout({
+      name: "random",
+      fit: true,
+      padding: 50,
+      rows: 50,
+      avoidOverlap: true,
+    });
+    layout.run();
+
+    cy.on("click", "node", (evt) => {
+      let node = evt.target;
+      console.log("tapped " + node.id());
+      handleClick(node);
+    });
+  }, [isElementsLoaded]);
 
   return (
     <div className="w-screen grid grid-cols-3">
