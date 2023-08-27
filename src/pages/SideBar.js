@@ -1,4 +1,4 @@
-export default function SideBar({ nodeName, circleLayout}) {
+export default function SideBar({ nodeName, circleLayout }) {
   console.log('nome: ' + nodeName);
   return (
     <aside className="col-start-3 bg-azul-500">

@@ -197,15 +197,15 @@ export default function Visualization() {
   }, [isElementsLoaded]);
 
   return (
-    <div className="w-screen grid grid-cols-3">
-      <Header />
-      {isElementsLoaded ? (
-        <main id="cy" className="h-screen col-start-1 col-span-2"></main>
-      ) : (
-        <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
-      )}
-      {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-      <SideBar nodeName={nodeName} circleLayout={circleLayout} />
-    </div>
+      <div className="w-screen grid grid-cols-3">
+        <Header />
+        {isElementsLoaded ? (
+          <main id="cy" className="h-screen col-start-1 col-span-2"></main>
+        ) : (
+          <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
+        )}
+        {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
+        <SideBar nodeName={nodeName} circleLayout={circleLayout}/>
+      </div>
   );
 }
