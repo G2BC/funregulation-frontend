@@ -9,6 +9,7 @@ import SideBar from "./SideBar";
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
   const [isElementsLoaded, setIsElementsLoaded] = useState(false);
+  const [savedElements, setSavedElements] = useState([]);
 
   const router = useRouter();
   const { organism } = router.query;
@@ -128,6 +129,69 @@ export default function Visualization() {
     layout.run();
     cy.mount(document.getElementById("cy"));
     console.log('circle layout selected');
+    console.log(cy.elements())
+    console.log(cy.nodes())
+    console.log(cy.edges())
+  }
+
+  function saveGraphState() {
+    const elements = cy.elements().jsons();
+    console.log(elements)
+    console.log(typeof(elements))
+    setSavedElements(elements);
+    console.log(savedElements);
+  }
+
+  function loadGraphState(graphState) {
+    console.log('entered load graph state')
+    let options = {
+      name: "preset",
+      positions: undefined, // map of (node id) => (position obj); or function(node){ return somPos; }
+      zoom: undefined, // the zoom level to set (prob want fit = false if set)
+      pan: undefined, // the pan level to set (prob want fit = false if set)
+      fit: true, // whether to fit to viewport
+      padding: 30, // padding on fit
+      animate: false, // whether to transition the node positions
+      animationDuration: 500, // duration of animation in ms if enabled
+      animationEasing: undefined, // easing of animation if enabled
+      animateFilter: function ( node, i ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+      ready: undefined, // callback on layoutready
+      stop: undefined, // callback on layoutstop
+      transform: function (node, position ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
+    };
+    const layout = cy.layout(options);
+    cy.unmount();
+    const nodes = cy.nodes();
+    cy.remove(nodes);
+    console.log(cy.nodes())
+    //cy.add(graphState);
+    layout.run();
+    cy.mount(document.getElementById("cy"));
+  }
+
+  async function exportGraph() {
+    const options = {
+      output: 'base64uri',
+    };
+    const png64 = cy.png(options);
+    //document.querySelector('#png-eg').setAttribute('src', png64);
+    // const blob = new Blob([png64], {type: 'data:image/png;base64'});
+    // const url = URL.createObjectURL(blob);
+    // const downloadLink = document.createElement('a');
+    // downloadLink.href = url;
+    // downloadLink.download = 'graph-export.png';
+    // document.body.appendChild(downloadLink);
+    // downloadLink.click();
+    // document.body.removeChild(downloadLink);
+    // URL.revokeObjectURL(url);
+
+    document.querySelector('#png-eg').setAttribute('src', png64);
+
+    let a = document.createElement('a');
+    const blob = new Blob([png64], {type: 'data:image/png;base64'});
+    a.href = URL.createObjectURL(blob);
+    a.download = 'graph-export.png';
+    a.click();
   }
 
   const [elements, setElements] = useState([]);
@@ -205,7 +269,7 @@ export default function Visualization() {
           <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} circleLayout={circleLayout}/>
+        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} savedElements={savedElements} exportGraph={exportGraph} />
       </div>
   );
 }
