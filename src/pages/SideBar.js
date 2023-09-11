@@ -1,6 +1,6 @@
-export default function SideBar({ nodeName, circleLayout, saveGraphState, loadGraphState, savedElements, exportGraph }) {
+export default function SideBar({ nodeName, circleLayout, saveGraphState, loadGraphState, savedElements, exportGraph, filterElements, restoreGraph }) {
   return (
-    <aside className="col-start-3 bg-azul-500">
+    <aside className="col-start-3 bg-azul-500 text-branco">
       <h1 className="m-4 text-center text-xl font-semibold">Detalhes</h1>
       <h5 className = "font-semibold">Nome proteina: {nodeName}</h5>
       <button type="button" onClick={circleLayout}>Circle</button>
@@ -10,6 +10,12 @@ export default function SideBar({ nodeName, circleLayout, saveGraphState, loadGr
       <button type="button" onClick={() => loadGraphState(savedElements)}>Load State</button>
       <br />
       <button type="button" onClick={exportGraph}>Export Graph</button>
+      <br />
+      <br />
+      <input id="search" type="text"></input>
+      <button type="button" onClick={() => filterElements(document.getElementById('search').value)}>Filter</button>
+      <br />
+      <button type="button" onClick={restoreGraph}>Restore</button>
       <div id="png-eg" className="w-10 h-10"></div>
     </aside>
   );

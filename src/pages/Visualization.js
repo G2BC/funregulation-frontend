@@ -9,7 +9,10 @@ import SideBar from "./SideBar";
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
   const [isElementsLoaded, setIsElementsLoaded] = useState(false);
+  const [elements, setElements] = useState([]);
   const [savedElements, setSavedElements] = useState([]);
+  const [zoom, setZoom] = useState(1);
+  let notConnected;
 
   const router = useRouter();
   const { organism } = router.query;
@@ -135,6 +138,7 @@ export default function Visualization() {
   }
 
   function saveGraphState() {
+    cy.unbind('click');
     const elements = cy.elements().jsons();
     console.log(elements)
     console.log(typeof(elements))
@@ -143,6 +147,7 @@ export default function Visualization() {
   }
 
   function loadGraphState(graphState) {
+    cy.unbind('click');
     console.log('entered load graph state')
     let options = {
       name: "preset",
@@ -194,7 +199,37 @@ export default function Visualization() {
     a.click();
   }
 
-  const [elements, setElements] = useState([]);
+  function filterElements(nodeName) {
+    cy.unbind('click');
+    let element;
+    element = cy.nodes().getElementById(nodeName);
+    console.log(element);
+    element = element.union(element.predecessors());
+    console.log(element);
+    element = element.union(element.successors());
+    console.log(element);
+    notConnected = cy.elements().not(element);
+    let viewFilter = cy.remove(notConnected);
+    
+    // var element;
+    // cy.nodes().forEach((node) => {
+    //   if (node._private.data.id == nodeName) {
+    //     element = node;
+    //   }
+    // });
+    // console.log(element);
+    // console.log(element.predecessors());
+
+
+    //let connected = cy.filter("node[name = 'TSTA_089450']");
+    //console.log(`Elementos: ${connected}`);
+  }
+
+  function restoreGraph() {
+    if (notConnected) {
+      notConnected.restore();
+    }
+  }
 
   // useEffect(() => {
   //   getElements();
@@ -269,7 +304,11 @@ export default function Visualization() {
           <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} savedElements={savedElements} exportGraph={exportGraph} />
+        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph}/>
+        <div className="w-screen h-8 col-start-1 col-span-1 bg-branco">
+        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom + 1)}>Zoom In</button>
+        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom - 1)}>Zoom Out</button>
+        </div>  
       </div>
   );
 }
