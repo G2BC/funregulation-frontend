@@ -12,12 +12,10 @@ export default function Visualization() {
   const [elements, setElements] = useState([]);
   const [savedElements, setSavedElements] = useState([]);
   const [zoom, setZoom] = useState(1);
-  let notConnected;
+  const [filter, setFilter] = useState();
+  const [tfs, setTfs] = useState();
 
-  const router = useRouter();
-  const { organism } = router.query;
-
-  let cy = cytoscape({
+  const [cy, setCy] = useState(cytoscape({
     zoom: 1,
     minZoom: 1,
     maxZoom: 10,
@@ -46,7 +44,43 @@ export default function Visualization() {
         },
       },
     ],
-  });
+  }));
+
+  let notConnected;
+
+  const router = useRouter();
+  const { organism } = router.query;
+
+  // let cy = cytoscape({
+  //   zoom: 1,
+  //   minZoom: 1,
+  //   maxZoom: 10,
+  //   nodeSpacing: 5,
+  //   animate: true,
+  //   randomize: true,
+  //   textureOnViewport: true,
+  //   style: [
+  //     {
+  //       selector: "node",
+  //       style: {
+  //         "background-color": "#666",
+  //         label: "data(id)",
+  //         shape: "data(shape)",
+  //       },
+  //     },
+
+  //     {
+  //       selector: "edge",
+  //       style: {
+  //         width: 3,
+  //         "line-color": "#ccc",
+  //         "target-arrow-color": "#ccc",
+  //         "target-arrow-shape": "triangle",
+  //         "curve-style": "bezier",
+  //       },
+  //     },
+  //   ],
+  // });
 
   function getElements() {
     axios
@@ -199,30 +233,33 @@ export default function Visualization() {
     a.click();
   }
 
-  function filterElements(nodeName) {
+  function filterElements(filter) {
+    console.log(cy.nodes());
     cy.unbind('click');
-    let element;
-    element = cy.nodes().getElementById(nodeName);
-    console.log(element);
-    element = element.union(element.predecessors());
-    console.log(element);
-    element = element.union(element.successors());
-    console.log(element);
-    notConnected = cy.elements().not(element);
+    let collection1;
+    let collection2;
+    filter.forEach((f) => {
+      if(collection1 == undefined) {
+        console.log(f.value);
+        collection1 = cy.nodes().getElementById(f.value);
+        collection1 = collection1.union(collection1.predecessors());
+        collection1 = collection1.union(collection1.successors());
+        console.log('collection 1');
+        console.log(collection1);
+      }
+      else {
+        collection2 = cy.nodes().getElementById(f.value);
+        collection2 = collection2.union(collection2.predecessors());
+        collection2 = collection2.union(collection2.successors());
+        console.log('collection 2');
+        console.log(collection2);
+        collection1.merge(collection2);
+      }
+    });
+    console.log('collection full')
+    console.log(collection1);
+    notConnected = cy.elements().not(collection1);
     let viewFilter = cy.remove(notConnected);
-    
-    // var element;
-    // cy.nodes().forEach((node) => {
-    //   if (node._private.data.id == nodeName) {
-    //     element = node;
-    //   }
-    // });
-    // console.log(element);
-    // console.log(element.predecessors());
-
-
-    //let connected = cy.filter("node[name = 'TSTA_089450']");
-    //console.log(`Elementos: ${connected}`);
   }
 
   function restoreGraph() {
@@ -235,6 +272,7 @@ export default function Visualization() {
   //   getElements();
   // }, []);
   useEffect(() => {
+    console.log('requisição api')
     axios
       .get("http://localhost:3000/api/grn", { params: { organism: organism } })
       .then((response) => {
@@ -260,6 +298,13 @@ export default function Visualization() {
           nodes.push(elemento);
         });
         setElements(nodes);
+        let elementos = []
+        nodes.forEach((elemento) => {
+          if (elemento.data.shape == 'triangle') {
+            elementos.push({value: elemento.data.id, label: elemento.data.id})
+          }
+        });
+        setTfs(elementos);
         setIsElementsLoaded(true);
       })
       .catch((error) => {
@@ -304,7 +349,7 @@ export default function Visualization() {
           <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph}/>
+        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} elements={elements} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph} filter={filter} setFilter={setFilter} tfs={tfs}/>
         <div className="w-screen h-8 col-start-1 col-span-1 bg-branco">
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom + 1)}>Zoom In</button>
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom - 1)}>Zoom Out</button>
