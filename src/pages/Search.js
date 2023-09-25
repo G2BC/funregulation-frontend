@@ -7,6 +7,8 @@ export default function Search() {
     const [genes, setGenes] = useState([])
     const [isElementsLoaded, setIsElementsLoaded] = useState(false);
     const [organism, setOrganism] = useState('');
+    const [proteinOrtho, setproteinOrtho] = useState(false);
+    const [rsat, setRsat] = useState(false);
 
     function getGenes() {
         axios
@@ -28,6 +30,16 @@ export default function Search() {
         setOrganism(e.target.value);
       }
 
+      function handleproteinOrthoChange(e) {
+        setproteinOrtho(!e.target.checked);
+        console.log(proteinOrtho);
+      }
+
+      function handleRSATChange(e) {
+        setRsat(!e.target.checked);
+        console.log(rsat);
+      }
+
     return(
         <div className="w-screen grid grid-cols-3">
             <Header/>
@@ -42,7 +54,11 @@ export default function Search() {
                     <option value="GRN2">Gene Regulatory Network 2</option>
                     <option value="GRN3">Gene Regulatory Network 3</option> */}
                 </select>
-                <Link href={{pathname: '/Visualization', query:{ organism: organism }}}><button className="w-24 h-8 bg-azul-700 text-branco">Pesquisar</button></Link>
+                <input type="checkbox" id="protein-ortho" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
+                <label for="protein-ortho">Protein Ortho</label>
+                <input type="checkbox" id="rsat" name="rsat" onChange={handleRSATChange} />
+                <label for="rsat">RSAT</label>
+                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}}><button className="w-24 h-8 bg-azul-700 text-branco">Pesquisar</button></Link>
                 
             </main>
         </div>
