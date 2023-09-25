@@ -6,6 +6,8 @@ import cytoscape from "cytoscape";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
+import data from '../lib/data.json';
+
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
   const [isElementsLoaded, setIsElementsLoaded] = useState(false);
@@ -272,21 +274,11 @@ export default function Visualization() {
   //   getElements();
   // }, []);
   useEffect(() => {
-    console.log('requisição api')
-    axios
-      .get("http://localhost:3000/api/grn", { params: { organism: organism } })
-      .then((response) => {
-        const { tfs, tgs, edges } = response.data;
-        // console.log(`TFs: ${tfs}`);
-        // console.log(`TGs: ${tgs}`);
-        // edges.forEach(edge => {
-        //   console.log(`Edge: ${edge.tf_locus_tag} e ${edge.tg_locus_tag}`);
-        // });
+    // axios
+    //   .get("http://localhost:3000/api/grn", { params: { organism: organism } })
+    //   .then((response) => {
+        const { tfs, tgs, edges } = data;
 
-        //PARA CORRIGIR OS ELEMENTOS DO JSON EM SINTAXE ERRADA
-        // tfs.forEach(element => {
-        //   console.log(`{"id": "${element}"},`)
-        // });
         let nodes = [];
         tfs.forEach((elemento) => {
           nodes.push(elemento);
@@ -306,10 +298,10 @@ export default function Visualization() {
         });
         setTfs(elementos);
         setIsElementsLoaded(true);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      //})
+      // .catch((error) => {
+      //   console.error(error);
+      // });
   }, []);
 
   const handleClick = (node) => {
