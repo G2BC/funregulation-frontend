@@ -17,6 +17,7 @@ export default function Visualization() {
   const [zoom, setZoom] = useState(1);
   const [filter, setFilter] = useState();
   const [tfs, setTfs] = useState();
+  const [isHided, setIsHided] = useState(false);
 
   const [cy, setCy] = useState(cytoscape({
     zoom: 1,
@@ -271,6 +272,28 @@ export default function Visualization() {
     }
   }
 
+  function hideSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const cytoscapeDiv = document.getElementById('cy');
+    if (!isHided) {
+      sidebar.style.display = 'none';
+      cytoscapeDiv.classList.remove('col-span-2')
+      cytoscapeDiv.classList.add('col-span-3')
+      cy.resize();
+      cy.fit();
+      setIsHided(true);
+    } else {
+      cytoscapeDiv.classList.remove('col-span-3')
+      cytoscapeDiv.classList.add('col-span-2')
+      sidebar.style.display = 'block';
+      cy.resize();
+      cy.fit();
+      setIsHided(false);
+    }
+    
+    
+  }
+
   // useEffect(() => {
   //   getElements();
   // }, []);
@@ -357,6 +380,7 @@ export default function Visualization() {
         onChange={(choices) => setFilter(choices)}
         />
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => filterElements(filter)}>Filter</button>
+        <button className="w-48 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={hideSidebar}>Ocultar informações</button>
         </div>  
       </div>
   );

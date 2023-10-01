@@ -2,7 +2,7 @@ import Select from 'react-select';
 
 export default function SideBar({ nodeName, circleLayout, saveGraphState, loadGraphState, savedElements, exportGraph, filterElements, restoreGraph, elements, filter, setFilter, tfs}) {
   return (
-    <aside className="col-start-3 bg-azul-500 text-branco">
+    <aside id="sidebar" className="col-start-3 bg-azul-500 text-branco">
       <h1 className="m-4 text-center text-xl font-semibold">Detalhes</h1>
       <h5 className = "font-semibold">Nome proteina: {nodeName}</h5>
       <br />
