@@ -343,8 +343,8 @@ export default function Visualization() {
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
         <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} elements={elements} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph} filter={filter} setFilter={setFilter} tfs={tfs}/>
         <div className="w-screen h-8 col-start-1 col-span-1 bg-branco">
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom + 1)}>Zoom In</button>
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom - 1)}>Zoom Out</button>
+        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
+        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
         </div>  
       </div>
   );
