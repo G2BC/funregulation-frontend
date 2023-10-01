@@ -337,13 +337,13 @@ export default function Visualization() {
       <div className="w-screen grid grid-cols-3">
         <Header />
         {isElementsLoaded ? (
-          <main id="cy" className="h-screen col-start-1 col-span-2"></main>
+          <main id="cy" className="h-[80vh] col-start-1 col-span-2"></main>
         ) : (
-          <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
+          <h1 className="h-[80vh] col-start-1 col-span-2">"Carregando..."</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
         <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} elements={elements} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph} filter={filter} setFilter={setFilter} tfs={tfs}/>
-        <div className="w-screen h-12 col-start-1 bg-branco inline-flex">
+        <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
         <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={circleLayout}>Circle</button>
@@ -352,7 +352,7 @@ export default function Visualization() {
         isMulti
         name="tfs"
         options={tfs}
-        className="w-44 m-2 p-1"
+        className="w-96 m-2 p-1"
         classNamePrefix="select"
         onChange={(choices) => setFilter(choices)}
         />
