@@ -48,7 +48,7 @@ export default function Search() {
     return(
         <div className="w-screen grid grid-cols-3">
             <Header/>
-            <main className="w-screen h-96 flex flex-col justify-center items-center col-start-1 col-end-3">
+            <main className="w-screen mt-20 flex flex-col justify-center items-center col-start-1 col-end-3">
               <h2 className="text-4xl mb-10">Selecione abaixo um organismo para calcular a GRN:</h2>
               <Select
               Single
@@ -64,13 +64,18 @@ export default function Search() {
                       <option key={gene.organism} value={gene.organism}>{gene.organism}</option>
                     ) : <option key={1}value="">Selecione uma opção</option>}
                 </select></div>*/}
-                <div id="checkboxes" className="justify-center align-middle text-center mb-4">
+                <h2 className="text-3xl mb-10">Analysis Config:</h2>
+                <h2 className="text-2xl mb-10">Orthologous Analysis</h2>
+                <div id="checkbox-orthologous" className="justify-center text-center mb-4">
                   <input type="checkbox" id="protein-ortho" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
                   <label className="ml-1" for="protein-ortho">Protein Ortho</label>
+                </div>
+                <div id="checkbox-rsat" className="justify-center text-center mb-4">
                   <input className="ml-4 p-1" type="checkbox" id="rsat" name="rsat" onChange={handleRSATChange} />
                   <label className="ml-1" for="rsat">RSAT</label>
+                  <h2 className="text-2xl mb-10">Orthologous Analysis</h2>
                 </div>
-                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}}><button className="w-24 h-8 bg-azul-700 text-branco">Pesquisar</button></Link>
+                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}}><button className="w-24 h-8 bg-azul-700 text-branco">Construct</button></Link>
                 
             </main>
         </div>
