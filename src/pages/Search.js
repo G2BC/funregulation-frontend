@@ -48,7 +48,7 @@ export default function Search() {
     return(
         <div className="w-screen grid grid-cols-3">
             <Header/>
-            <main className="w-screen mt-20 flex flex-col justify-center items-center col-start-1 col-end-3">
+            <main className="w-[60vw] mt-20 ml-auto flex flex-col justify-center col-start-1 col-end-3">
               <h2 className="text-4xl mb-10">Selecione abaixo um organismo para calcular a GRN:</h2>
               <Select
               Single
@@ -70,12 +70,12 @@ export default function Search() {
                   <input type="checkbox" id="protein-ortho" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
                   <label className="ml-1" for="protein-ortho">Protein Ortho</label>
                 </div>
+                <h2 className="text-2xl mb-10">Transcription Sector Binding Sites</h2>
                 <div id="checkbox-rsat" className="justify-center text-center mb-4">
                   <input className="ml-4 p-1" type="checkbox" id="rsat" name="rsat" onChange={handleRSATChange} />
                   <label className="ml-1" for="rsat">RSAT</label>
-                  <h2 className="text-2xl mb-10">Orthologous Analysis</h2>
                 </div>
-                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}}><button className="w-24 h-8 bg-azul-700 text-branco">Construct</button></Link>
+                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}} className="justify-center"><button type="button" className="w-24 h-8 bg-azul-700 text-branco justify-center">Construct</button></Link>
                 
             </main>
         </div>
