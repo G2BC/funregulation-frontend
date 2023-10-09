@@ -273,6 +273,7 @@ export default function Visualization() {
   }
 
   function hideSidebar() {
+    console.log('entrou hidesidebar');
     const sidebar = document.getElementById('sidebar');
     const cytoscapeDiv = document.getElementById('cy');
     if (!isHided) {
@@ -330,6 +331,7 @@ export default function Visualization() {
 
   const handleClick = (node) => {
     setNodeName(node.id());
+    hideSidebar();
   };
 
   // useEffect(() => {
