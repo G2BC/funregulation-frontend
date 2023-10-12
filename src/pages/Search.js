@@ -46,37 +46,44 @@ export default function Search() {
       }
 
     return(
-        <div className="w-screen grid grid-cols-3">
+        <div className="w-screen h-screen bg-[#f5f5f5]">
             <Header/>
-            <main className="w-[60vw] mt-20 ml-auto flex flex-col justify-center col-start-1 col-end-3">
-              <h2 className="text-4xl mb-10">Selecione abaixo um organismo para calcular a GRN:</h2>
-              <Select
-              Single
-              name="organisms"
-              options={selectData}
-              className="w-96 m-2 p-1"
-              classNamePrefix="select"
-              onChange={''}
-              />
-                {/*<select className="w-96 h-8" onChange={handleSelectChange}>
-                    <option default value="">Selecione uma opção</option>
-                    {isElementsLoaded ? genes.map(gene => 
-                      <option key={gene.organism} value={gene.organism}>{gene.organism}</option>
-                    ) : <option key={1}value="">Selecione uma opção</option>}
-                </select></div>*/}
-                <h2 className="text-3xl mb-10">Analysis Config:</h2>
-                <h2 className="text-2xl mb-10">Orthologous Analysis</h2>
-                <div id="checkbox-orthologous" className="justify-center text-center mb-4">
-                  <input type="checkbox" id="protein-ortho" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
-                  <label className="ml-1" for="protein-ortho">Protein Ortho</label>
+            <main className="w-screen mt-20 ml-auto flex-1 justify-center">
+              <div id="wrapper" className="flex  flex-col w-[50vw] m-auto p-8 rounded-md shadow-md bg-branco">
+                <h2 className="text-4xl mb-10 self-center font-bold">Select an organism below to calculate the GRN</h2>
+                <Select
+                Single
+                name="organisms"
+                options={selectData}
+                className="w-96 m-2 p-1 self-center mb-10"
+                classNamePrefix="select"
+                onChange={''}
+                />
+                  {/*<select className="w-96 h-8" onChange={handleSelectChange}>
+                      <option default value="">Selecione uma opção</option>
+                      {isElementsLoaded ? genes.map(gene => 
+                        <option key={gene.organism} value={gene.organism}>{gene.organism}</option>
+                      ) : <option key={1}value="">Selecione uma opção</option>}
+                  </select></div>*/}
+                  <div className="flex flex-1 items-start">
+                      <h2 className="text-2xl font-bold mb-4">Analysis Config</h2>
+                  </div>
+                  <div className="flex flex-col border-solid border-[1px] border-[#ccc] rounded-md p-4 mb-8">
+                    <h2 className="text-xl mb-4">Orthologous Analysis</h2>
+                    <div id="checkbox-orthologous" className="justify-center text-center mb-8">
+                      <input type="checkbox" id="protein-ortho" className="rounded" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
+                      <label className="ml-1 text-lg" for="protein-ortho">Protein Ortho</label>
+                    </div>
+                    <h2 className="text-xl mb-4">Transcription Sector Binding Sites</h2>
+                    <div id="checkbox-rsat" className="justify-center text-center">
+                      <input className="p-1 rounded" type="checkbox" id="rsat" name="rsat" onChange={handleRSATChange} />
+                      <label className="ml-1 text-lg" for="rsat">RSAT</label>
+                    </div>
+                  </div>
+                  <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}} className="w-full">
+                    <button type="button" className="w-full h-12 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold">BUILD</button>
+                  </Link>
                 </div>
-                <h2 className="text-2xl mb-10">Transcription Sector Binding Sites</h2>
-                <div id="checkbox-rsat" className="justify-center text-center mb-4">
-                  <input className="ml-4 p-1" type="checkbox" id="rsat" name="rsat" onChange={handleRSATChange} />
-                  <label className="ml-1" for="rsat">RSAT</label>
-                </div>
-                <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}} className="justify-center"><button type="button" className="w-24 h-8 bg-azul-700 text-branco justify-center">Construct</button></Link>
-                
             </main>
         </div>
     );
