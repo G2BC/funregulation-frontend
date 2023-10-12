@@ -273,7 +273,8 @@ export default function Visualization() {
   }
 
   function hideSidebar() {
-    console.log('entrou hidesidebar');
+    // console.log(isHided);
+    // console.log(typeof(isHided));
     const sidebar = document.getElementById('sidebar');
     const cytoscapeDiv = document.getElementById('cy');
     if (!isHided) {
@@ -329,9 +330,10 @@ export default function Visualization() {
       // });
   }, []);
 
-  const handleClick = (node) => {
+  function handleClick(node) {
     setNodeName(node.id());
     hideSidebar();
+    console.log(isHided);
   };
 
   // useEffect(() => {
@@ -339,24 +341,26 @@ export default function Visualization() {
   //     renderCytoscape(cy);
   // }, [elements]);
   useEffect(()=> {
-    cy.mount(document.getElementById("cy"));
-    //cy.container(document.getElementById("cy"));
-    cy.add(elements);
-    const layout = cy.layout({
-      name: "random",
-      fit: true,
-      padding: 50,
-      rows: 50,
-      avoidOverlap: true,
-    });
-    layout.run();
+    if(isElementsLoaded) {
+      cy.mount(document.getElementById("cy"));
+      //cy.container(document.getElementById("cy"));
+      cy.add(elements);
+      const layout = cy.layout({
+        name: "random",
+        fit: true,
+        padding: 50,
+        rows: 50,
+        avoidOverlap: true,
+      });
+      layout.run();
 
-    cy.on("click", "node", (evt) => {
-      let node = evt.target;
-      console.log("tapped " + node.id());
-      handleClick(node);
-    });
-  }, [isElementsLoaded]);
+      cy.on("click", "node", (evt) => {
+        let node = evt.target;
+        console.log("tapped " + node.id());
+        handleClick(node);
+      });
+    }
+  }, [isElementsLoaded, isHided]);
 
   return (
       <div className="w-screen grid grid-cols-3">
