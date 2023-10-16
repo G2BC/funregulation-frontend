@@ -8,7 +8,7 @@ export default function Search() {
     const [genes, setGenes] = useState([])
     const [isElementsLoaded, setIsElementsLoaded] = useState(false);
     const [organism, setOrganism] = useState('');
-    const [proteinOrtho, setproteinOrtho] = useState(false);
+    const [proteinOrtho, setproteinOrtho] = useState(true);
     const [rsat, setRsat] = useState(false);
     const [selectData, setSelectData] = useState()
 
@@ -17,10 +17,12 @@ export default function Search() {
           .get("http://localhost:3000/api/genes")
           .then((response) => {
             setGenes(response.data);
-            setIsElementsLoaded(true);
+            let data = [];
             response.data.forEach((elemento) => {
-              setSelectData(...selectData, {value: elemento.data.id, label: elemento.data.id});
+              data.push({value: elemento.accession, label: elemento.accession});
             });
+            setSelectData(data);
+            setIsElementsLoaded(true);
           })
           .catch((error) => {
             console.error(error);
@@ -32,7 +34,17 @@ export default function Search() {
       }, []);
 
       function handleSelectChange(e) {
-        setOrganism(e.target.value);
+        setOrganism(e.value);
+        genes.forEach((gene) => {
+          if (e.value == gene.accession) {
+            if (!gene.cis_bp) {
+              document.getElementById('rsat').checked = false;
+              document.getElementById('rsat').disabled = true;
+            } else if (gene.cis_bp) {
+              document.getElementById('rsat').disabled = false;
+            };
+          }
+        });
       }
 
       function handleproteinOrthoChange(e) {
@@ -57,7 +69,7 @@ export default function Search() {
                 options={selectData}
                 className="w-96 m-2 p-1 self-center mb-10"
                 classNamePrefix="select"
-                onChange={''}
+                onChange={(e) => handleSelectChange(e)}
                 />
                   {/*<select className="w-96 h-8" onChange={handleSelectChange}>
                       <option default value="">Selecione uma opção</option>
@@ -71,7 +83,7 @@ export default function Search() {
                   <div className="flex flex-col border-solid border-[1px] border-[#ccc] rounded-md p-4 mb-8">
                     <h2 className="text-xl mb-4">Orthologous Analysis</h2>
                     <div id="checkbox-orthologous" className="justify-center text-center mb-8">
-                      <input type="checkbox" id="protein-ortho" className="rounded" name="protein-ortho" defaultChecked={true} onChange={handleproteinOrthoChange}/>
+                      <input type="checkbox" id="protein-ortho" className="rounded" name="protein-ortho" disabled defaultChecked={true} onChange={handleproteinOrthoChange}/>
                       <label className="ml-1 text-lg" for="protein-ortho">Protein Ortho</label>
                     </div>
                     <h2 className="text-xl mb-4">Transcription Sector Binding Sites</h2>

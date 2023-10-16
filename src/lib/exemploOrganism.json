@@ -1,0 +1,20 @@
+[
+    {
+        "accession": "GCA_000001985.1",
+        "order": "Eurotiales",
+        "genus": "Talaromyces",
+        "species": "marneffei",
+        "strain": "ATCC 18224",
+        "is_model": false,
+        "cis_bp": true
+    },
+    {
+        "accession": "TESTE",
+        "order": "Eurotiales",
+        "genus": "Talaromyces",
+        "species": "marneffei",
+        "strain": "ATCC 18224",
+        "is_model": false,
+        "cis_bp": false
+    }
+]
