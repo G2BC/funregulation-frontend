@@ -18,6 +18,7 @@ export default function Visualization() {
   const [filter, setFilter] = useState();
   const [tfs, setTfs] = useState();
   const [isHided, setIsHided] = useState(false);
+  const [originalElements, setOriginalElements] = useState();
 
   const [cy, setCy] = useState(cytoscape({
     zoom: 1,
@@ -238,7 +239,6 @@ export default function Visualization() {
   }
 
   function filterElements(filter) {
-    console.log('NOS VISAO ATUAL');
     console.log(cy.nodes());
     cy.unbind('click');
     let collection1;
@@ -249,30 +249,29 @@ export default function Visualization() {
         collection1 = cy.nodes().getElementById(f.value);
         collection1 = collection1.union(collection1.predecessors());
         //collection1 = collection1.union(collection1.successors());
-        console.log('collection 1');
-        console.log(collection1);
       }
       else {
         collection2 = cy.nodes().getElementById(f.value);
         collection2 = collection2.union(collection2.predecessors());
         //collection2 = collection2.union(collection2.successors());
-        console.log('collection 2');
-        console.log(collection2);
         collection1.merge(collection2);
       }
     });
-    console.log('collection full')
-    console.log(collection1);
     notConnected = cy.elements().not(collection1);
     let viewFilter = cy.remove(notConnected);
     //let pos = cy.nodes("[id = " + filter[0].id + "]").position();
     //cy.zoom({level: 0, position: pos});
+    cy.on("click", "node", (evt) => {
+      let node = evt.target;
+      console.log("tapped " + node.id());
+      handleClick(node);
+    });
   }
 
   function restoreGraph() {
-    if (notConnected) {
-      notConnected.restore();
-    }
+    cy.remove(cy.elements());
+    cy.add(originalElements);
+    cy.mount(document.getElementById("cy"));
   }
 
   function hideSidebar() {
@@ -340,7 +339,7 @@ export default function Visualization() {
 
   function handleClick(node) {
     setNodeName(node.id());
-    hideSidebar();
+    //hideSidebar();
     console.log(isHided);
   };
 
@@ -367,6 +366,7 @@ export default function Visualization() {
         console.log("tapped " + node.id());
         handleClick(node);
       });
+      setOriginalElements(cy.elements());
     }
   }, [isElementsLoaded]);
 
