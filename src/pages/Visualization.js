@@ -7,7 +7,7 @@ import cytoscape from "cytoscape";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
-import data from '../lib/data.json';
+import data from '../lib/GCA_0012757652.json';
 
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
@@ -103,13 +103,13 @@ export default function Visualization() {
         // });
         let nodes = [];
         tfs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tf_locus_tag, "shape": "triangle"}});
         });
         tgs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tg_locus_tag, "shape": "ellipse"}});
         });
         edges.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tf_locus_tag, "regulatory_function": elemento.regulatory_function}});
         });
         setElements(nodes);
         setIsElementsLoaded(true);
@@ -238,6 +238,7 @@ export default function Visualization() {
   }
 
   function filterElements(filter) {
+    console.log('NOS VISAO ATUAL');
     console.log(cy.nodes());
     cy.unbind('click');
     let collection1;
@@ -264,6 +265,8 @@ export default function Visualization() {
     console.log(collection1);
     notConnected = cy.elements().not(collection1);
     let viewFilter = cy.remove(notConnected);
+    //let pos = cy.nodes("[id = " + filter[0].id + "]").position();
+    //cy.zoom({level: 0, position: pos});
   }
 
   function restoreGraph() {
@@ -306,16 +309,21 @@ export default function Visualization() {
         const { tfs, tgs, edges } = data;
 
         let nodes = [];
+        console.log(`TFs: ${tfs.length}`);
         tfs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tf_locus_tag, "shape": "triangle"}});
         });
+        console.log(`TGs: ${tgs.length}`);
         tgs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tg_locus_tag, "shape": "ellipse"}});
         });
+        console.log(`Edges: ${edges.length}`);
         edges.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tg_locus_tag, "regulatory_function": elemento.regulatory_function}});
         });
+        console.log(nodes.length);
         setElements(nodes);
+        console.log('finalizou adicao de nós');
         let elementos = []
         nodes.forEach((elemento) => {
           if (elemento.data.shape == 'triangle') {
@@ -347,7 +355,7 @@ export default function Visualization() {
       cy.add(elements);
       const layout = cy.layout({
         name: "random",
-        fit: true,
+        fit: false,
         padding: 50,
         rows: 50,
         avoidOverlap: true,
@@ -360,7 +368,7 @@ export default function Visualization() {
         handleClick(node);
       });
     }
-  }, [isElementsLoaded, isHided]);
+  }, [isElementsLoaded]);
 
   return (
       <div className="w-screen grid grid-cols-3">

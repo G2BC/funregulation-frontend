@@ -1,7 +1,7 @@
 import connection from "@/lib/db"
 import axios from "axios";
 
-import data from '../../lib/data.json';
+import data from '../../lib/GCA_0012757652.json';
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
