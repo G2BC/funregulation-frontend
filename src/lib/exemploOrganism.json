@@ -10,10 +10,10 @@
     },
     {
         "accession": "TESTE",
-        "order": "Eurotiales",
-        "genus": "Talaromyces",
-        "species": "marneffei",
-        "strain": "ATCC 18224",
+        "order": "Teste1",
+        "genus": "Teste2",
+        "species": "Teste3",
+        "strain": "Teste4",
         "is_model": false,
         "cis_bp": false
     }

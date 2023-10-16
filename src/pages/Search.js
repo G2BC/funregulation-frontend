@@ -10,7 +10,11 @@ export default function Search() {
     const [organism, setOrganism] = useState('');
     const [proteinOrtho, setproteinOrtho] = useState(true);
     const [rsat, setRsat] = useState(false);
-    const [selectData, setSelectData] = useState()
+    const [selectData, setSelectData] = useState();
+    const [organismSpecies, setOrganismSpecies] = useState('');
+    const [organismOrder, setOrganismOrder] = useState('');
+    const [organismGenus, setOrganismGenus] = useState('');
+    const [organismStrain, setOrganismStrain] = useState('');
 
     function getGenes() {
         axios
@@ -37,6 +41,13 @@ export default function Search() {
         setOrganism(e.value);
         genes.forEach((gene) => {
           if (e.value == gene.accession) {
+            setOrganismOrder(gene.order);
+            setOrganismGenus(gene.genus);
+            setOrganismSpecies(gene.species);
+            setOrganismStrain(gene.strain);
+            let information = document.getElementById('information');
+            information.classList.remove('hidden');
+            information.classList.add('flex');
             if (!gene.cis_bp) {
               document.getElementById('rsat').checked = false;
               document.getElementById('rsat').disabled = true;
@@ -71,6 +82,12 @@ export default function Search() {
                 classNamePrefix="select"
                 onChange={(e) => handleSelectChange(e)}
                 />
+                <div id="information" className="hidden w-96 m-auto flex-col border-solid border-[1px] border-[#ccc] rounded-md p-4 mb-8">
+                  <h4 className="ml-1 text-lg">Order: {organismOrder}</h4>
+                  <h4 className="ml-1 text-lg">Genus: {organismGenus}</h4>
+                  <h4 className="ml-1 text-lg">Species: {organismSpecies}</h4>
+                  <h4 className="ml-1 text-lg">Strain: {organismStrain}</h4>
+                </div>
                   {/*<select className="w-96 h-8" onChange={handleSelectChange}>
                       <option default value="">Selecione uma opção</option>
                       {isElementsLoaded ? genes.map(gene => 
