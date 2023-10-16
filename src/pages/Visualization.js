@@ -248,14 +248,14 @@ export default function Visualization() {
         console.log(f.value);
         collection1 = cy.nodes().getElementById(f.value);
         collection1 = collection1.union(collection1.predecessors());
-        collection1 = collection1.union(collection1.successors());
+        //collection1 = collection1.union(collection1.successors());
         console.log('collection 1');
         console.log(collection1);
       }
       else {
         collection2 = cy.nodes().getElementById(f.value);
         collection2 = collection2.union(collection2.predecessors());
-        collection2 = collection2.union(collection2.successors());
+        //collection2 = collection2.union(collection2.successors());
         console.log('collection 2');
         console.log(collection2);
         collection1.merge(collection2);
