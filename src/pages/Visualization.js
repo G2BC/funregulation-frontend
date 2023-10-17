@@ -381,10 +381,10 @@ export default function Visualization() {
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
         <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} elements={elements} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph} filter={filter} setFilter={setFilter} tfs={tfs}/>
         <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={circleLayout}>Circle</button>
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={restoreGraph}>Restore</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={circleLayout}>Circle</button>
+        <button className="w-24 h-12 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={restoreGraph}>Restore</button>
         <Select
         isMulti
         name="tfs"
@@ -393,8 +393,8 @@ export default function Visualization() {
         classNamePrefix="select"
         onChange={(choices) => setFilter(choices)}
         />
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => filterElements(filter)}>Filter</button>
-        <button className="w-48 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={hideSidebar}>Ocultar informações</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => filterElements(filter)}>Filter</button>
+        <button className="w-44 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={hideSidebar}>Hide sidebar</button>
         </div>  
       </div>
   );
