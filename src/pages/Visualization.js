@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Select from 'react-select';
@@ -19,20 +19,32 @@ export default function Visualization() {
   const [tfs, setTfs] = useState();
   const [isHided, setIsHided] = useState(false);
   const [originalElements, setOriginalElements] = useState();
+  // node details
+  const [nodeCentrality, setNodeCentrality] = useState(0);
+  const [nodeInterpro, setNodeInterpro] = useState([]);
+  const [nodeEc, setNodeEc] = useState([]);
+  const [nodeCazy, setNodeCazy] = useState([]);
+  const [nodePfan, setNodePfan] = useState([]);
+  const [nodePanther, setNodePanther] = useState([]);
+  const [nodeGenome3d, setNodeGenome3d] = useState([]);
+  const [nodeUniprot, setNodeUniprot] = useState([]);
+  const [nodeGo, setNodeGo] = useState([]);
+  const [nodeReactome, setNodeReactome] = useState([]);
 
   const [cy, setCy] = useState(cytoscape({
     zoom: 1,
-    minZoom: 1,
+    minZoom: 0,
     maxZoom: 10,
     nodeSpacing: 5,
     animate: true,
     randomize: true,
     textureOnViewport: true,
+    hideEdgesOnViewport: true,
     style: [
       {
         selector: "node",
         style: {
-          "background-color": "#666",
+          "background-color": "grey",
           label: "data(id)",
           shape: "data(shape)",
         },
@@ -42,9 +54,9 @@ export default function Visualization() {
         selector: "edge",
         style: {
           width: 3,
-          "line-color": "#ccc",
-          "target-arrow-color": "#ccc",
-          "target-arrow-shape": "triangle",
+          "line-color": "data(regulatory_color)",
+          "target-arrow-color": "data(regulatory_color)",
+          "target-arrow-shape": "data(regulatory_function)",
           "curve-style": "bezier",
         },
       },
@@ -110,7 +122,16 @@ export default function Visualization() {
           nodes.push({"data": {"id": elemento.tg_locus_tag, "shape": "ellipse"}});
         });
         edges.forEach((elemento) => {
-          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tf_locus_tag, "regulatory_function": elemento.regulatory_function}});
+          let arrowType;
+          if(elemento.regulatory_function == 'Positive'){
+            arrowType = 'triangle';
+          } else if(elemento.regulatory_function == 'Negative') {
+            arrowType = 'triangle-tee';
+          } else if(elemento.regulatory_function == 'Not Applicable') {
+            arrowType = 'none';
+          }
+          console.log(elemento.id, arrowType);
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tf_locus_tag, "regulatory_function": arrowType}});
         });
         setElements(nodes);
         setIsElementsLoaded(true);
@@ -243,17 +264,23 @@ export default function Visualization() {
     cy.unbind('click');
     let collection1;
     let collection2;
+    let collection_predecessors;
+    let collection_successors;
     filter.forEach((f) => {
       if(collection1 == undefined) {
         console.log(f.value);
         collection1 = cy.nodes().getElementById(f.value);
-        collection1 = collection1.union(collection1.predecessors());
+        //collection1 = collection1.union(collection1.predecessors());
         //collection1 = collection1.union(collection1.successors());
+        collection_predecessors = collection1.predecessors();
+        collection_successors = collection1.successors();
+        collection1 = collection1.union(collection_predecessors);
+        //collection1 = collection1.union(collection_successors);
       }
       else {
         collection2 = cy.nodes().getElementById(f.value);
-        collection2 = collection2.union(collection2.predecessors());
-        //collection2 = collection2.union(collection2.successors());
+        //collection2 = collection2.union(collection2.predecessors());
+        collection2 = collection2.union(collection2.successors());
         collection1.merge(collection2);
       }
     });
@@ -318,7 +345,19 @@ export default function Visualization() {
         });
         console.log(`Edges: ${edges.length}`);
         edges.forEach((elemento) => {
-          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tg_locus_tag, "regulatory_function": elemento.regulatory_function}});
+          let arrowType;
+          let arrowColor;
+          if(elemento.regulatory_function == 'Positive'){
+            arrowType = 'triangle';
+            arrowColor = 'green';
+          } else if(elemento.regulatory_function == 'Negative') {
+            arrowType = 'tee';
+            arrowColor = 'red';
+          } else if(elemento.regulatory_function == 'Not Applicable') {
+            arrowType = 'none';
+            arrowColor = 'grey';
+          }
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tg_locus_tag, "regulatory_function": arrowType, "regulatory_color": arrowColor}});
         });
         console.log(nodes.length);
         setElements(nodes);
@@ -339,9 +378,14 @@ export default function Visualization() {
 
   function handleClick(node) {
     setNodeName(node.id());
+    requestNodeInfo(nodeName);
     //hideSidebar();
-    console.log(isHided);
+    //console.log(isHided);
   };
+
+  function requestNodeInfo(nodeName) {
+    
+  }
 
   // useEffect(() => {
   //     console.log('renderizou')
@@ -353,11 +397,13 @@ export default function Visualization() {
       //cy.container(document.getElementById("cy"));
       cy.add(elements);
       const layout = cy.layout({
-        name: "random",
-        fit: false,
-        padding: 50,
-        rows: 50,
+        name: "grid",
+        fit: true,
+        padding: 15,
+        rows: 100,
+        cols: 150,
         avoidOverlap: true,
+        spacingFactor: 4
       });
       layout.run();
 
@@ -376,10 +422,10 @@ export default function Visualization() {
         {isElementsLoaded ? (
           <main id="cy" className="h-[80vh] col-start-1 col-span-2"></main>
         ) : (
-          <h1 className="h-[80vh] col-start-1 col-span-2">"Carregando..."</h1>
+          <h1 className="h-[80vh] col-start-1 col-span-2 text-center items-center font-bold text-lg">Loading GRN...</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} elements={elements} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph} filter={filter} setFilter={setFilter} tfs={tfs}/>
+        <SideBar nodeName={nodeName} nodeCentrality={nodeCentrality} nodeInterpro={nodeInterpro} nodeEc={nodeEc} />
         <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
