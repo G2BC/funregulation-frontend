@@ -1,6 +1,6 @@
 import connection from "@/lib/db"
 import * as dotenv from 'dotenv';
-import data from '../../lib/exemploOrganism.json';
+import data from '../../lib/listOrganisms.json';
 
 const conn = connection;
 dotenv.config();
