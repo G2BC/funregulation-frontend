@@ -73,7 +73,7 @@ export default function Search() {
             <Header/>
             <main className="w-screen mt-20 ml-auto flex-1 justify-center">
               <div id="wrapper" className="flex  flex-col w-[50vw] m-auto p-8 rounded-md shadow-md bg-branco">
-                <h2 className="text-4xl mb-10 self-center font-bold">Select an organism below to calculate the GRN</h2>
+                <h2 className="text-4xl mb-10 self-center font-bold">Select a fungus to build the GRN</h2>
                 <Select
                 Single
                 name="organisms"
