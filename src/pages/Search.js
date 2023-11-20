@@ -109,7 +109,7 @@ export default function Search() {
                       <label className="ml-1 text-lg" for="rsat">RSAT</label>
                     </div>
                   </div>
-                  <Link href={{pathname: '/Visualization', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}} className="w-full">
+                  <Link href={{pathname: '/GRNRequest', query:{ organism: organism, rsat: rsat, proteinOrtho: proteinOrtho }}} className="w-full">
                     <button type="button" className="w-full h-12 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold">BUILD</button>
                   </Link>
                 </div>
