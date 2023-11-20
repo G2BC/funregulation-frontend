@@ -8,6 +8,7 @@ import Header from "./Header";
 import SideBar from "./SideBar";
 
 import data from '../lib/GCA_0012757652.json';
+import data2 from '../lib/GCA_0002256051.json';
 
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
@@ -19,6 +20,7 @@ export default function Visualization() {
   const [tfs, setTfs] = useState();
   const [isHided, setIsHided] = useState(false);
   const [originalElements, setOriginalElements] = useState();
+  const [grnTFsCount, setGrnTFsCount] = useState(0);
   // node details
   const [nodeCentrality, setNodeCentrality] = useState(0);
   const [nodeInterpro, setNodeInterpro] = useState([]);
@@ -336,6 +338,7 @@ export default function Visualization() {
 
         let nodes = [];
         console.log(`TFs: ${tfs.length}`);
+        setGrnTFsCount(tfs.length);
         tfs.forEach((elemento) => {
           nodes.push({"data": {"id": elemento.tf_locus_tag, "shape": "triangle"}});
         });
@@ -356,6 +359,9 @@ export default function Visualization() {
           } else if(elemento.regulatory_function == 'Not Applicable') {
             arrowType = 'none';
             arrowColor = 'grey';
+          } else {
+            arrowType = 'none';
+            arrowColor = 'grey';
           }
           nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tg_locus_tag, "regulatory_function": arrowType, "regulatory_color": arrowColor}});
         });
@@ -369,6 +375,7 @@ export default function Visualization() {
           }
         });
         setTfs(elementos);
+        console.log(data2);
         setIsElementsLoaded(true);
       //})
       // .catch((error) => {
@@ -401,7 +408,7 @@ export default function Visualization() {
         fit: true,
         padding: 15,
         rows: 100,
-        cols: 150,
+        cols: grnTFsCount,
         avoidOverlap: true,
         spacingFactor: 4
       });
