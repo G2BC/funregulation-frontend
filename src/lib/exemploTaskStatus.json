@@ -1,1 +1,57 @@
-{"Order analyse":"COMPLETED","Download organism":"COMPLETED","ProteinOrtho":"COMPLETED","Creating graph":"COMPLETED","Degree calculation":"COMPLETED","Closeness calculation":"COMPLETED","Betweenness calculation":"COMPLETED","Eigenvector calculation":"COMPLETED","Harmonic calculation":"COMPLETED","Rsat":"COMPLETED","Pipeline Completed":true}
+[
+  {
+    "id": "order_analyse",
+    "name": "Order analyse",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "download_organism",
+    "name": "Download organism",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "ProteinOrtho",
+    "name": "ProteinOrtho",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "creating_graph",
+    "name": "Creating graph",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "degree_calculation",
+    "name": "Degree calculation",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "closeness_calculation",
+    "name": "Closeness calculation",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "betweenness_calculation",
+    "name": "Betweenness calculation",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "eigenvector_calculation",
+    "name": "Eigenvector calculation",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "harmonic_calculation",
+    "name": "Harmonic calculation",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "rsat",
+    "name": "RSAT",
+    "status": "COMPLETED"
+  },
+  {
+    "id": "pipeline_completed",
+    "name": "Pipeline Completed",
+    "status": false
+  }
+]
