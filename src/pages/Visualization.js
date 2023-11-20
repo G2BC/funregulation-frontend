@@ -7,8 +7,8 @@ import cytoscape from "cytoscape";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
-import data from '../lib/GCA_0012757652.json';
-import data2 from '../lib/GCA_0002256051.json';
+//import data from '../lib/GCA_0012757652.json';
+//import data2 from '../lib/GCA_0002256051.json';
 
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
@@ -331,10 +331,10 @@ export default function Visualization() {
   //   getElements();
   // }, []);
   useEffect(() => {
-    // axios
-    //   .get("http://localhost:3000/api/grn", { params: { organism: organism } })
-    //   .then((response) => {
-        const { tfs, tgs, edges } = data;
+      axios
+      .get("http://localhost:3000/api/grn", { params: { organism: organism } })
+      .then((response) => {
+      const { tfs, tgs, edges } = response.data;
 
         let nodes = [];
         console.log(`TFs: ${tfs.length}`);
@@ -375,12 +375,11 @@ export default function Visualization() {
           }
         });
         setTfs(elementos);
-        console.log(data2);
         setIsElementsLoaded(true);
-      //})
-      // .catch((error) => {
-      //   console.error(error);
-      // });
+      })
+       .catch((error) => {
+         console.error(error);
+      });
   }, []);
 
   function handleClick(node) {
