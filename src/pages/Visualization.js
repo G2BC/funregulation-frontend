@@ -15,7 +15,7 @@ export default function Visualization() {
   const [isElementsLoaded, setIsElementsLoaded] = useState(false);
   const [elements, setElements] = useState([]);
   const [savedElements, setSavedElements] = useState([]);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(1.0);
   const [filter, setFilter] = useState();
   const [tfs, setTfs] = useState();
   const [isHided, setIsHided] = useState(false);
@@ -35,8 +35,8 @@ export default function Visualization() {
 
   const [cy, setCy] = useState(cytoscape({
     zoom: 1,
-    minZoom: 0,
-    maxZoom: 10,
+    minZoom: 0.2,
+    maxZoom: 8,
     nodeSpacing: 5,
     animate: true,
     randomize: true,
@@ -393,6 +393,15 @@ export default function Visualization() {
     
   }
 
+  function changeZoom(zoomType) {
+    const defaultZoom = 0.2;
+    if ((zoomType == 'in') && (zoom < 8)) {
+      setZoom(zoom + defaultZoom);
+    } else if ((zoomType == 'out') && (zoom > 0.2)) {
+      setZoom(zoom - defaultZoom);
+    }
+  }
+
   // useEffect(() => {
   //     console.log('renderizou')
   //     renderCytoscape(cy);
@@ -433,8 +442,8 @@ export default function Visualization() {
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
         <SideBar nodeName={nodeName} nodeCentrality={nodeCentrality} nodeInterpro={nodeInterpro} nodeEc={nodeEc} />
         <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
-        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => {setZoom(zoom + 1); cy.zoom(zoom);}}>Zoom In</button>
-        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { setZoom(zoom - 1); cy.zoom(zoom);}}>Zoom Out</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('in'); cy.zoom(zoom); console.log(zoom);}}>Zoom In</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('out'); cy.zoom(zoom); console.log(zoom);}}>Zoom Out</button>
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={circleLayout}>Circle</button>
         <button className="w-24 h-12 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={restoreGraph}>Restore</button>
         <Select
