@@ -32,6 +32,9 @@ export default function Visualization() {
   const [nodeUniprot, setNodeUniprot] = useState([]);
   const [nodeGo, setNodeGo] = useState([]);
   const [nodeReactome, setNodeReactome] = useState([]);
+  
+  const [initTime, setInitTime] = useState(0);
+  const [finishTime, setFinishTime] = useState(0);
 
   const [cy, setCy] = useState(cytoscape({
     zoom: 1,
@@ -331,6 +334,9 @@ export default function Visualization() {
   //   getElements();
   // }, []);
   useEffect(() => {
+    const currentDate = new Date();
+    setInitTime(currentDate.getTime());
+    console.log("Tempo início carregamento: ", currentDate.getTime());
       axios
       .get("http://localhost:3000/api/grn", { params: { organism: organism } })
       .then((response) => {
@@ -429,6 +435,9 @@ export default function Visualization() {
       });
       setOriginalElements(cy.elements());
     }
+    const currentDate = new Date();
+    setFinishTime(currentDate.getTime());
+    console.log("Tempo fim carregamento: ", currentDate.getTime());
   }, [isElementsLoaded]);
 
   return (
@@ -452,6 +461,7 @@ export default function Visualization() {
         options={tfs}
         className="w-96 m-2 p-1"
         classNamePrefix="select"
+        placeholder="Select TFs to filter"
         onChange={(choices) => setFilter(choices)}
         />
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => filterElements(filter)}>Filter</button>
