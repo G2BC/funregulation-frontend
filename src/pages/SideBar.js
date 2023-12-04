@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
-export default function SideBar({ nodeName }) {
+export default function SideBar({ nodeName, grn }) {
   const [isInfoLoaded, setIsInfoLoaded] = useState(true);
   const [infoProtein, setInfoProtein] = useState({});
+  const [grnInfo, setGrnInfo] = useState({});
 
   function getNodeInfo() {
     axios
@@ -16,23 +17,48 @@ export default function SideBar({ nodeName }) {
       });
   }
 
+  function getGRNInfo() {
+    axios
+      .get("http://localhost:3000/api/grn_info", { params: { grn: grn } })
+      .then((response) => {
+        console.log(response.data);
+        setGrnInfo(response.data);
+      }
+      ).catch((error) => {
+        console.error(error);
+      });
+  }
+
   useEffect(() => {
     getNodeInfo();
+    
   }, [nodeName]);
+
+  useEffect(() => {
+    getGRNInfo();
+    
+  }, []);
+  
 
   return (
     <aside id="sidebar" className="col-start-3 bg-azul-500 text-branco">
-      <h1 className="m-4 text-center text-xl font-semibold">Estatísticas da Rede</h1>
-      
-      <br />
-      {/* <button type="button" onClick={saveGraphState}>Save State</button> */}
-      <br />
-      {/* <button type="button" onClick={() => loadGraphState(savedElements)}>Load State</button> */}
-      <br />
-      {/* <button type="button" onClick={exportGraph}>Export Graph</button> */}
-      <br />
-      <div id="png-eg" className="w-10 h-10"></div>
-      
+      <div className="w-full m-2 p-1">
+        <h1 className="m-4 text-center text-xl font-semibold">GRN Statistics</h1>
+        <h3 className = "font-semibold">Interactions: {grnInfo.interactions}</h3>
+        <h3 className = "font-semibold">Nodes: {grnInfo.nodes}</h3>
+        <h3 className = "font-semibold">Self-regulations: {grnInfo.selfregulations}</h3>
+        <h3 className = "font-semibold">Positive Regulations: {grnInfo.positiveregulations}</h3>
+        <h3 className = "font-semibold">Negative Regulations: {grnInfo.negativeregulations}</h3>
+        <h3 className = "font-semibold">Unknown Regulations: {grnInfo.unknownregulations}</h3>
+        <br />
+        {/* <button type="button" onClick={saveGraphState}>Save State</button> */}
+        <br />
+        {/* <button type="button" onClick={() => loadGraphState(savedElements)}>Load State</button> */}
+        <br />
+        {/* <button type="button" onClick={exportGraph}>Export Graph</button> */}
+        <br />
+        <div id="png-eg" className="w-10 h-10"></div>
+      </div>
       <h1 className="m-4 text-center text-xl font-semibold">Node information</h1>
       {isInfoLoaded ? (
         <div className="w-full m-2 p-1">

@@ -441,7 +441,7 @@ export default function Visualization() {
           <h1 className="h-[80vh] col-start-1 col-span-2 text-center items-center font-bold text-lg">Loading GRN...</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} nodeCentrality={nodeCentrality} nodeInterpro={nodeInterpro} nodeEc={nodeEc} />
+        <SideBar nodeName={nodeName} grn={organism} />
         <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('in'); cy.zoom(zoom); console.log(zoom);}}>Zoom In</button>
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('out'); cy.zoom(zoom); console.log(zoom);}}>Zoom Out</button>
