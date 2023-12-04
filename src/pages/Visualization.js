@@ -241,27 +241,19 @@ export default function Visualization() {
 
   async function exportGraph() {
     const options = {
-      output: 'base64uri',
+      output: 'blob',
     };
     const png64 = cy.png(options);
-    //document.querySelector('#png-eg').setAttribute('src', png64);
-    // const blob = new Blob([png64], {type: 'data:image/png;base64'});
-    // const url = URL.createObjectURL(blob);
-    // const downloadLink = document.createElement('a');
-    // downloadLink.href = url;
-    // downloadLink.download = 'graph-export.png';
-    // document.body.appendChild(downloadLink);
-    // downloadLink.click();
-    // document.body.removeChild(downloadLink);
-    // URL.revokeObjectURL(url);
-
     document.querySelector('#png-eg').setAttribute('src', png64);
-
-    let a = document.createElement('a');
-    const blob = new Blob([png64], {type: 'data:image/png;base64'});
-    a.href = URL.createObjectURL(blob);
-    a.download = 'graph-export.png';
-    a.click();
+    const blob = new Blob([png64], {type: 'data:image/png;blob'});
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'graph-export.png';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
   }
 
   function filterElements(filter) {
@@ -465,6 +457,7 @@ export default function Visualization() {
         onChange={(choices) => setFilter(choices)}
         />
         <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => filterElements(filter)}>Filter</button>
+        <button className="w-44 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={exportGraph}>Export View</button>
         <button className="w-44 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={hideSidebar}>Hide sidebar</button>
         </div>  
       </div>
