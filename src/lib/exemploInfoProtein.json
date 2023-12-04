@@ -1,0 +1,13 @@
+{
+  "id": "EGX95353.1",
+  "product": "37S ribosomal protein S12",
+  "interpro": "IPR002594",
+  "pfam": "PF01670",
+  "go": "0005576",
+  "gene3d": "P22669",
+  "reactome": "R-HSA-114547",
+  "panther": "PTHR34002",
+  "uniprot": "014405",
+  "ec_number": "3.2.1.4",
+  "cazy": "GH12"
+}
