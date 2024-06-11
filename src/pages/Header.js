@@ -5,9 +5,9 @@ export default function Header() {
     <header className="w-screen h-16 flex justify-center gap-10 items-center col-start-1 col-span-2 text-branco bg-azul-700">
       <img className="w-32" src="/img/funregulation-logo-colored.png" alt="FunRegulation logo"/>
       <menu className="w-96 flex justify-around">
-        <Link className="hover:text-ciano-500" href="/">INÍCIO</Link>
-        <Link className="hover:text-ciano-500" href="/Search">VISUALIZAR REDES</Link>
-        <Link className="hover:text-ciano-500" href="#">SOBRE</Link>
+        <Link className="hover:text-ciano-500" href="/">HOME</Link>
+        <Link className="hover:text-ciano-500" href="/Search">BUILD GRN</Link>
+        <Link className="hover:text-ciano-500" href="#">ABOUT</Link>
       </menu>
     </header>
   );

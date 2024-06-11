@@ -1,35 +1,55 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import Select from 'react-select';
 import cytoscape from "cytoscape";
 
 import Header from "./Header";
 import SideBar from "./SideBar";
+
+//import data from '../lib/GCA_0012757652.json';
+//import data2 from '../lib/GCA_0002256051.json';
 
 export default function Visualization() {
   const [nodeName, setNodeName] = useState("");
   const [isElementsLoaded, setIsElementsLoaded] = useState(false);
   const [elements, setElements] = useState([]);
   const [savedElements, setSavedElements] = useState([]);
-  const [zoom, setZoom] = useState(1);
-  let notConnected;
+  const [zoom, setZoom] = useState(1.0);
+  const [filter, setFilter] = useState();
+  const [tfs, setTfs] = useState();
+  const [isHided, setIsHided] = useState(false);
+  const [originalElements, setOriginalElements] = useState();
+  const [grnTFsCount, setGrnTFsCount] = useState(0);
+  // node details
+  const [nodeCentrality, setNodeCentrality] = useState(0);
+  const [nodeInterpro, setNodeInterpro] = useState([]);
+  const [nodeEc, setNodeEc] = useState([]);
+  const [nodeCazy, setNodeCazy] = useState([]);
+  const [nodePfan, setNodePfan] = useState([]);
+  const [nodePanther, setNodePanther] = useState([]);
+  const [nodeGenome3d, setNodeGenome3d] = useState([]);
+  const [nodeUniprot, setNodeUniprot] = useState([]);
+  const [nodeGo, setNodeGo] = useState([]);
+  const [nodeReactome, setNodeReactome] = useState([]);
+  
+  const [initTime, setInitTime] = useState(0);
+  const [finishTime, setFinishTime] = useState(0);
 
-  const router = useRouter();
-  const { organism } = router.query;
-
-  let cy = cytoscape({
+  const [cy, setCy] = useState(cytoscape({
     zoom: 1,
-    minZoom: 1,
-    maxZoom: 10,
+    minZoom: 0.2,
+    maxZoom: 8,
     nodeSpacing: 5,
     animate: true,
     randomize: true,
     textureOnViewport: true,
+    hideEdgesOnViewport: true,
     style: [
       {
         selector: "node",
         style: {
-          "background-color": "#666",
+          "background-color": "grey",
           label: "data(id)",
           shape: "data(shape)",
         },
@@ -39,14 +59,50 @@ export default function Visualization() {
         selector: "edge",
         style: {
           width: 3,
-          "line-color": "#ccc",
-          "target-arrow-color": "#ccc",
-          "target-arrow-shape": "triangle",
+          "line-color": "data(regulatory_color)",
+          "target-arrow-color": "data(regulatory_color)",
+          "target-arrow-shape": "data(regulatory_function)",
           "curve-style": "bezier",
         },
       },
     ],
-  });
+  }));
+
+  let notConnected;
+
+  const router = useRouter();
+  const { organism } = router.query;
+
+  // let cy = cytoscape({
+  //   zoom: 1,
+  //   minZoom: 1,
+  //   maxZoom: 10,
+  //   nodeSpacing: 5,
+  //   animate: true,
+  //   randomize: true,
+  //   textureOnViewport: true,
+  //   style: [
+  //     {
+  //       selector: "node",
+  //       style: {
+  //         "background-color": "#666",
+  //         label: "data(id)",
+  //         shape: "data(shape)",
+  //       },
+  //     },
+
+  //     {
+  //       selector: "edge",
+  //       style: {
+  //         width: 3,
+  //         "line-color": "#ccc",
+  //         "target-arrow-color": "#ccc",
+  //         "target-arrow-shape": "triangle",
+  //         "curve-style": "bezier",
+  //       },
+  //     },
+  //   ],
+  // });
 
   function getElements() {
     axios
@@ -65,13 +121,22 @@ export default function Visualization() {
         // });
         let nodes = [];
         tfs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tf_locus_tag, "shape": "triangle"}});
         });
         tgs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tg_locus_tag, "shape": "ellipse"}});
         });
         edges.forEach((elemento) => {
-          nodes.push(elemento);
+          let arrowType;
+          if(elemento.regulatory_function == 'Positive'){
+            arrowType = 'triangle';
+          } else if(elemento.regulatory_function == 'Negative') {
+            arrowType = 'triangle-tee';
+          } else if(elemento.regulatory_function == 'Not Applicable') {
+            arrowType = 'none';
+          }
+          console.log(elemento.id, arrowType);
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tf_locus_tag, "regulatory_function": arrowType}});
         });
         setElements(nodes);
         setIsElementsLoaded(true);
@@ -116,7 +181,7 @@ export default function Visualization() {
       sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
       clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
       sort: undefined, // a sorting function to order the nodes; e.g. function(a, b){ return a.data('weight') - b.data('weight') }
-      animate: false, // whether to transition the node positions
+      animate: true, // whether to transition the node positions
       animationDuration: 500, // duration of animation in ms if enabled
       animationEasing: undefined, // easing of animation if enabled
       animateFilter: function (node, i) {
@@ -176,138 +241,224 @@ export default function Visualization() {
 
   async function exportGraph() {
     const options = {
-      output: 'base64uri',
+      output: 'blob',
     };
     const png64 = cy.png(options);
-    //document.querySelector('#png-eg').setAttribute('src', png64);
-    // const blob = new Blob([png64], {type: 'data:image/png;base64'});
-    // const url = URL.createObjectURL(blob);
-    // const downloadLink = document.createElement('a');
-    // downloadLink.href = url;
-    // downloadLink.download = 'graph-export.png';
-    // document.body.appendChild(downloadLink);
-    // downloadLink.click();
-    // document.body.removeChild(downloadLink);
-    // URL.revokeObjectURL(url);
-
     document.querySelector('#png-eg').setAttribute('src', png64);
-
-    let a = document.createElement('a');
-    const blob = new Blob([png64], {type: 'data:image/png;base64'});
-    a.href = URL.createObjectURL(blob);
-    a.download = 'graph-export.png';
-    a.click();
+    const blob = new Blob([png64], {type: 'data:image/png;blob'});
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'graph-export.png';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
   }
 
-  function filterElements(nodeName) {
+  function filterElements(filter) {
+    console.log(cy.nodes());
     cy.unbind('click');
-    let element;
-    element = cy.nodes().getElementById(nodeName);
-    console.log(element);
-    element = element.union(element.predecessors());
-    console.log(element);
-    element = element.union(element.successors());
-    console.log(element);
-    notConnected = cy.elements().not(element);
+    let collection1;
+    let collection2;
+    let collection_predecessors;
+    let collection_successors;
+    filter.forEach((f) => {
+      if(collection1 == undefined) {
+        console.log(f.value);
+        collection1 = cy.nodes().getElementById(f.value);
+        //collection1 = collection1.union(collection1.predecessors());
+        //collection1 = collection1.union(collection1.successors());
+        collection_predecessors = collection1.predecessors();
+        collection_successors = collection1.successors();
+        collection1 = collection1.union(collection_predecessors);
+        //collection1 = collection1.union(collection_successors);
+      }
+      else {
+        collection2 = cy.nodes().getElementById(f.value);
+        //collection2 = collection2.union(collection2.predecessors());
+        collection2 = collection2.union(collection2.successors());
+        collection1.merge(collection2);
+      }
+    });
+    notConnected = cy.elements().not(collection1);
     let viewFilter = cy.remove(notConnected);
-    
-    // var element;
-    // cy.nodes().forEach((node) => {
-    //   if (node._private.data.id == nodeName) {
-    //     element = node;
-    //   }
-    // });
-    // console.log(element);
-    // console.log(element.predecessors());
-
-
-    //let connected = cy.filter("node[name = 'TSTA_089450']");
-    //console.log(`Elementos: ${connected}`);
+    //let pos = cy.nodes("[id = " + filter[0].id + "]").position();
+    //cy.zoom({level: 0, position: pos});
+    cy.on("click", "node", (evt) => {
+      let node = evt.target;
+      console.log("tapped " + node.id());
+      handleClick(node);
+    });
   }
 
   function restoreGraph() {
-    if (notConnected) {
-      notConnected.restore();
+    cy.remove(cy.elements());
+    cy.add(originalElements);
+    cy.mount(document.getElementById("cy"));
+  }
+
+  function hideSidebar() {
+    // console.log(isHided);
+    // console.log(typeof(isHided));
+    const sidebar = document.getElementById('sidebar');
+    const cytoscapeDiv = document.getElementById('cy');
+    if (!isHided) {
+      sidebar.style.display = 'none';
+      cytoscapeDiv.classList.remove('col-span-2')
+      cytoscapeDiv.classList.add('col-span-3')
+      cy.resize();
+      cy.fit();
+      setIsHided(true);
+    } else {
+      cytoscapeDiv.classList.remove('col-span-3')
+      cytoscapeDiv.classList.add('col-span-2')
+      sidebar.style.display = 'block';
+      cy.resize();
+      cy.fit();
+      setIsHided(false);
     }
+    
+    
   }
 
   // useEffect(() => {
   //   getElements();
   // }, []);
   useEffect(() => {
-    axios
+    const currentDate = new Date();
+    setInitTime(currentDate.getTime());
+    console.log("Tempo início carregamento: ", currentDate.getTime());
+      axios
       .get("http://localhost:3000/api/grn", { params: { organism: organism } })
       .then((response) => {
-        const { tfs, tgs, edges } = response.data;
-        // console.log(`TFs: ${tfs}`);
-        // console.log(`TGs: ${tgs}`);
-        // edges.forEach(edge => {
-        //   console.log(`Edge: ${edge.tf_locus_tag} e ${edge.tg_locus_tag}`);
-        // });
+      const { tfs, tgs, edges } = response.data;
 
-        //PARA CORRIGIR OS ELEMENTOS DO JSON EM SINTAXE ERRADA
-        // tfs.forEach(element => {
-        //   console.log(`{"id": "${element}"},`)
-        // });
         let nodes = [];
+        console.log(`TFs: ${tfs.length}`);
+        setGrnTFsCount(tfs.length);
         tfs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tf_locus_tag, "shape": "triangle"}});
         });
+        console.log(`TGs: ${tgs.length}`);
         tgs.forEach((elemento) => {
-          nodes.push(elemento);
+          nodes.push({"data": {"id": elemento.tg_locus_tag, "shape": "ellipse"}});
         });
+        console.log(`Edges: ${edges.length}`);
         edges.forEach((elemento) => {
-          nodes.push(elemento);
+          let arrowType;
+          let arrowColor;
+          if(elemento.regulatory_function == 'Positive'){
+            arrowType = 'triangle';
+            arrowColor = 'green';
+          } else if(elemento.regulatory_function == 'Negative') {
+            arrowType = 'tee';
+            arrowColor = 'red';
+          } else if(elemento.regulatory_function == 'Not Applicable') {
+            arrowType = 'none';
+            arrowColor = 'grey';
+          } else {
+            arrowType = 'none';
+            arrowColor = 'grey';
+          }
+          nodes.push({"data": {"id": `${elemento.tf_locus_tag}-${elemento.tg_locus_tag}`, "source": elemento.tf_locus_tag, "target": elemento.tg_locus_tag, "regulatory_function": arrowType, "regulatory_color": arrowColor}});
         });
+        console.log(nodes.length);
         setElements(nodes);
+        console.log('finalizou adicao de nós');
+        let elementos = []
+        nodes.forEach((elemento) => {
+          if (elemento.data.shape == 'triangle') {
+            elementos.push({value: elemento.data.id, label: elemento.data.id})
+          }
+        });
+        setTfs(elementos);
         setIsElementsLoaded(true);
       })
-      .catch((error) => {
-        console.error(error);
+       .catch((error) => {
+         console.error(error);
       });
   }, []);
 
-  const handleClick = (node) => {
+  function handleClick(node) {
     setNodeName(node.id());
+    requestNodeInfo(nodeName);
+    //hideSidebar();
+    //console.log(isHided);
   };
+
+  function requestNodeInfo(nodeName) {
+    
+  }
+
+  function changeZoom(zoomType) {
+    const defaultZoom = 0.2;
+    if ((zoomType == 'in') && (zoom < 8)) {
+      setZoom(zoom + defaultZoom);
+    } else if ((zoomType == 'out') && (zoom > 0.2)) {
+      setZoom(zoom - defaultZoom);
+    }
+  }
 
   // useEffect(() => {
   //     console.log('renderizou')
   //     renderCytoscape(cy);
   // }, [elements]);
   useEffect(()=> {
-    cy.mount(document.getElementById("cy"));
-    //cy.container(document.getElementById("cy"));
-    cy.add(elements);
-    const layout = cy.layout({
-      name: "random",
-      fit: true,
-      padding: 50,
-      rows: 50,
-      avoidOverlap: true,
-    });
-    layout.run();
+    if(isElementsLoaded) {
+      cy.mount(document.getElementById("cy"));
+      //cy.container(document.getElementById("cy"));
+      cy.add(elements);
+      const layout = cy.layout({
+        name: "grid",
+        fit: true,
+        padding: 15,
+        rows: 100,
+        cols: grnTFsCount,
+        avoidOverlap: true,
+        spacingFactor: 4
+      });
+      layout.run();
 
-    cy.on("click", "node", (evt) => {
-      let node = evt.target;
-      console.log("tapped " + node.id());
-      handleClick(node);
-    });
+      cy.on("click", "node", (evt) => {
+        let node = evt.target;
+        console.log("tapped " + node.id());
+        handleClick(node);
+      });
+      setOriginalElements(cy.elements());
+    }
+    const currentDate = new Date();
+    setFinishTime(currentDate.getTime());
+    console.log("Tempo fim carregamento: ", currentDate.getTime());
   }, [isElementsLoaded]);
 
   return (
       <div className="w-screen grid grid-cols-3">
         <Header />
         {isElementsLoaded ? (
-          <main id="cy" className="h-screen col-start-1 col-span-2"></main>
+          <main id="cy" className="h-[80vh] col-start-1 col-span-2"></main>
         ) : (
-          <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>
+          <h1 className="h-[80vh] col-start-1 col-span-2 text-center items-center font-bold text-lg">Loading GRN...</h1>
         )}
         {/* {isElementsLoaded ? <Canva elements={ elements } setNodeName={setNodeName} cy={cy}/> : <h1 className="h-screen col-start-1 col-span-2">"Carregando..."</h1>} */}
-        <SideBar nodeName={nodeName} circleLayout={circleLayout} saveGraphState={saveGraphState} loadGraphState={loadGraphState} savedElements={savedElements} exportGraph={exportGraph} filterElements={filterElements} restoreGraph={restoreGraph}/>
-        <div className="w-screen h-8 col-start-1 col-span-1 bg-branco">
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom + 1)}>Zoom In</button>
-        <button className="w-24 m-2 p-1 bg-azul-500 text-branco" type="button" onClick={() => cy.zoom(zoom - 1)}>Zoom Out</button>
+        <SideBar nodeName={nodeName} grn={organism} />
+        <div className="w-screen h-16 col-start-1 bg-branco inline-flex">
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('in'); cy.zoom(zoom); console.log(zoom);}}>Zoom In</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => { changeZoom('out'); cy.zoom(zoom); console.log(zoom);}}>Zoom Out</button>
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={circleLayout}>Circle</button>
+        <button className="w-24 h-12 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={restoreGraph}>Restore</button>
+        <Select
+        isMulti
+        name="tfs"
+        options={tfs}
+        className="w-96 m-2 p-1"
+        classNamePrefix="select"
+        placeholder="Select TFs to filter"
+        onChange={(choices) => setFilter(choices)}
+        />
+        <button className="w-24 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={() => filterElements(filter)}>Filter</button>
+        <button className="w-44 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={exportGraph}>Export View</button>
+        <button className="w-44 m-2 bg-azul-700 text-branco rounded-md hover:bg-azul-600 transition duration-300 font-bold" type="button" onClick={hideSidebar}>Hide sidebar</button>
         </div>  
       </div>
   );
