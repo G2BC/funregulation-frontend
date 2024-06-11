@@ -1,6 +1,6 @@
 ![funregulation logo](public/img/funregulation-logo-colored.png)
 
-This project is the front-end of FunRegulation, a web system for manipulating and analyzing Gene Regulation Networks for Fungi, developed by the G2BC research group and part of the course completion work of Samuel Vieira, who has a bachelor's degree in Information Systems from the State University of Bahia.
+This project is the front-end of FunRegulation, a web system for manipulating and analyzing Gene Regulation Networks for Fungi, developed by the G2BC research group and part of the final paper of Samuel Vieira, who has a bachelor's degree in Information Systems from the State University of Bahia.
 
 ## Getting Started
 
